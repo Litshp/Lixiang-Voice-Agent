@@ -1,0 +1,232 @@
+{
+  "all": {
+    "sessions": 100,
+    "correct_once": {
+      "numerator": 89,
+      "denominator": 100,
+      "rate": 0.89
+    },
+    "task_completed": {
+      "numerator": 89,
+      "denominator": 100,
+      "rate": 0.89
+    },
+    "wrong_target": {
+      "numerator": 2,
+      "denominator": 100,
+      "rate": 0.02
+    },
+    "high_risk_wrong_target": {
+      "numerator": 0,
+      "denominator": 37,
+      "rate": 0.0
+    },
+    "high_risk_error": {
+      "numerator": 0,
+      "denominator": 100,
+      "rate": 0.0
+    },
+    "non_idempotent_duplicate": {
+      "numerator": 0,
+      "denominator": 100,
+      "rate": 0.0
+    },
+    "extra_commits": 0,
+    "acknowledged": {
+      "numerator": 91,
+      "denominator": 100,
+      "rate": 0.91
+    },
+    "clarified": {
+      "numerator": 40,
+      "denominator": 100,
+      "rate": 0.4
+    },
+    "p95_latency_ms": 1400,
+    "mean_model_cost_usd": 0.00206
+  },
+  "explicit_low": {
+    "sessions": 36,
+    "correct_once": {
+      "numerator": 36,
+      "denominator": 36,
+      "rate": 1.0
+    },
+    "task_completed": {
+      "numerator": 36,
+      "denominator": 36,
+      "rate": 1.0
+    },
+    "wrong_target": {
+      "numerator": 0,
+      "denominator": 36,
+      "rate": 0.0
+    },
+    "high_risk_wrong_target": {
+      "numerator": 0,
+      "denominator": 0,
+      "rate": null
+    },
+    "high_risk_error": {
+      "numerator": 0,
+      "denominator": 36,
+      "rate": 0.0
+    },
+    "non_idempotent_duplicate": {
+      "numerator": 0,
+      "denominator": 36,
+      "rate": 0.0
+    },
+    "extra_commits": 0,
+    "acknowledged": {
+      "numerator": 36,
+      "denominator": 36,
+      "rate": 1.0
+    },
+    "clarified": {
+      "numerator": 0,
+      "denominator": 36,
+      "rate": 0.0
+    },
+    "p95_latency_ms": 600,
+    "mean_model_cost_usd": 0.0
+  },
+  "simple_explicit_low": {
+    "sessions": 36,
+    "correct_once": {
+      "numerator": 36,
+      "denominator": 36,
+      "rate": 1.0
+    },
+    "task_completed": {
+      "numerator": 36,
+      "denominator": 36,
+      "rate": 1.0
+    },
+    "wrong_target": {
+      "numerator": 0,
+      "denominator": 36,
+      "rate": 0.0
+    },
+    "high_risk_wrong_target": {
+      "numerator": 0,
+      "denominator": 0,
+      "rate": null
+    },
+    "high_risk_error": {
+      "numerator": 0,
+      "denominator": 36,
+      "rate": 0.0
+    },
+    "non_idempotent_duplicate": {
+      "numerator": 0,
+      "denominator": 36,
+      "rate": 0.0
+    },
+    "extra_commits": 0,
+    "acknowledged": {
+      "numerator": 36,
+      "denominator": 36,
+      "rate": 1.0
+    },
+    "clarified": {
+      "numerator": 0,
+      "denominator": 36,
+      "rate": 0.0
+    },
+    "p95_latency_ms": 600,
+    "mean_model_cost_usd": 0.0
+  },
+  "high_risk": {
+    "sessions": 37,
+    "correct_once": {
+      "numerator": 31,
+      "denominator": 37,
+      "rate": 0.8378378378378378
+    },
+    "task_completed": {
+      "numerator": 31,
+      "denominator": 37,
+      "rate": 0.8378378378378378
+    },
+    "wrong_target": {
+      "numerator": 0,
+      "denominator": 37,
+      "rate": 0.0
+    },
+    "high_risk_wrong_target": {
+      "numerator": 0,
+      "denominator": 37,
+      "rate": 0.0
+    },
+    "high_risk_error": {
+      "numerator": 0,
+      "denominator": 37,
+      "rate": 0.0
+    },
+    "non_idempotent_duplicate": {
+      "numerator": 0,
+      "denominator": 37,
+      "rate": 0.0
+    },
+    "extra_commits": 0,
+    "acknowledged": {
+      "numerator": 31,
+      "denominator": 37,
+      "rate": 0.8378378378378378
+    },
+    "clarified": {
+      "numerator": 25,
+      "denominator": 37,
+      "rate": 0.6756756756756757
+    },
+    "p95_latency_ms": 1400,
+    "mean_model_cost_usd": 0.001757
+  },
+  "ambiguous": {
+    "sessions": 50,
+    "correct_once": {
+      "numerator": 39,
+      "denominator": 50,
+      "rate": 0.78
+    },
+    "task_completed": {
+      "numerator": 39,
+      "denominator": 50,
+      "rate": 0.78
+    },
+    "wrong_target": {
+      "numerator": 2,
+      "denominator": 50,
+      "rate": 0.04
+    },
+    "high_risk_wrong_target": {
+      "numerator": 0,
+      "denominator": 23,
+      "rate": 0.0
+    },
+    "high_risk_error": {
+      "numerator": 0,
+      "denominator": 50,
+      "rate": 0.0
+    },
+    "non_idempotent_duplicate": {
+      "numerator": 0,
+      "denominator": 50,
+      "rate": 0.0
+    },
+    "extra_commits": 0,
+    "acknowledged": {
+      "numerator": 41,
+      "denominator": 50,
+      "rate": 0.82
+    },
+    "clarified": {
+      "numerator": 38,
+      "denominator": 50,
+      "rate": 0.76
+    },
+    "p95_latency_ms": 1400,
+    "mean_model_cost_usd": 0.00328
+  }
+}

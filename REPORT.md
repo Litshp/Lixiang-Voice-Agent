@@ -1,6 +1,6 @@
 # 改善报告（开发中，非最终提交）
 
-- 实际投入：未持续计时，无法可靠填写总分钟数；不以跨日时长代替实际投入。
+- 实际投入：约 2 小时（用户提供）。
 - 一句话成果：可复现地说明已确认低风险请求绕过模型的收益和适用条件，并验证达成 600ms 还依赖规则额外开销不超过 20ms。
 
 ## 问题与判断
@@ -31,7 +31,7 @@
 
 ## 最终取舍与限制
 
-原约束暂保留 baseline；fast path 继续作为边界实验。37 条高风险无错只说明本次未观察到错误。真实确认来源、工具授权和规则延迟/费用未测；未解决 2 条歧义错误和全量 P95。合成数据不能推断线上收益。AI session 已有本地脱敏快照，但尚须补齐本轮后续消息并复核；可靠工时尚未补齐，当前不是交卷版本。
+原约束暂保留 baseline；fast path 继续作为边界实验。37 条高风险无错只说明本次未观察到错误。真实确认来源、工具授权和规则延迟/费用未测；未解决 2 条歧义错误和全量 P95。合成数据不能推断线上收益。AI session 已有本地脱敏快照，但尚须补齐本轮后续消息并复核；当前不是交卷版本。
 
 ## 复现
 
@@ -40,7 +40,7 @@ UV_CACHE_DIR=/tmp/codex-uv-cache uv run --quiet --offline --no-project python ta
 UV_CACHE_DIR=/tmp/codex-uv-cache uv run --quiet --offline --no-project python -m evals.candidate.reproduce
 ```
 
-输出：`runs/before/`、`runs/after/`（原约束保留 baseline）、`runs/fast_path/`（边界）、`runs/rejected_small/`、`runs/fast_path_20ms/`、`runs/fast_path_21ms/`，每组含 trace、旧指标、oracle 和分组指标；`runs/comparison.json` 汇总。runs 被 Git 忽略，本地保留，可按命令重建。
+输出：`runs/before/`、`runs/after/`（原约束保留 baseline）、`runs/fast_path/`（边界）、`runs/rejected_small/`、`runs/fast_path_20ms/`、`runs/fast_path_21ms/`，每组含 trace、旧指标、oracle 和分组指标；`runs/comparison.json` 汇总。
 
 ## 个人判断与 AI 交互
 

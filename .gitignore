@@ -1,4 +1,6 @@
-runs/
+runs/ai-sessions/
+runs/before_final/
+runs/fast_path_final/
 __pycache__/
 *.pyc
 .venv/

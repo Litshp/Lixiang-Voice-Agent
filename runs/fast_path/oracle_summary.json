@@ -1,0 +1,46 @@
+{
+  "sessions": 100,
+  "correct_once": {
+    "numerator": 89,
+    "denominator": 100,
+    "rate": 0.89
+  },
+  "task_completed": {
+    "numerator": 89,
+    "denominator": 100,
+    "rate": 0.89
+  },
+  "wrong_target": {
+    "numerator": 2,
+    "denominator": 100,
+    "rate": 0.02
+  },
+  "high_risk_wrong_target": {
+    "numerator": 0,
+    "denominator": 37,
+    "rate": 0.0
+  },
+  "high_risk_error": {
+    "numerator": 0,
+    "denominator": 100,
+    "rate": 0.0
+  },
+  "non_idempotent_duplicate": {
+    "numerator": 0,
+    "denominator": 100,
+    "rate": 0.0
+  },
+  "extra_commits": 0,
+  "acknowledged": {
+    "numerator": 91,
+    "denominator": 100,
+    "rate": 0.91
+  },
+  "clarified": {
+    "numerator": 40,
+    "denominator": 100,
+    "rate": 0.4
+  },
+  "p95_latency_ms": 1380,
+  "mean_model_cost_usd": 0.00206
+}
