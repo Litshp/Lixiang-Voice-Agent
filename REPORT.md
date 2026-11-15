@@ -1,24 +1,47 @@
-# 改善报告
+# 改善报告（开发中，非最终提交）
 
-- 实际投入：本次 session 未单独计时，提交前需按实际记录补填；环境准备：约 5 分钟
-- 一句话成果：明确且低风险的已确认目标现在可绕过模型直接执行，eligible 场景的澄清从 3/36 降为 0/36，P95 从 930ms 降为 580ms，平均模型成本降为 0。
+- 实际投入：未持续计时，无法可靠填写总分钟数；不以跨日时长代替实际投入。
+- 一句话成果：可复现地说明已确认低风险请求绕过模型的收益和适用条件，并验证达成 600ms 还依赖规则额外开销不超过 20ms。
 
 ## 问题与判断
 
-旧 `legacy_task_success` 只代表收到回执。baseline 为 90/100，但按真实目标核验只有 88/100 正确完成，且有 2/100 错误目标执行。优先保留高风险和非幂等安全底线，同时处理明确低风险请求的多余模型调用和澄清。尝试将明确请求全部路由到 `small` 后，澄清增加、完成率下降，因此按 EVAL_PLAN 的调整记录撤回该方案。
+原看板只计回执，90/100 不等于正确完成的 88/100。明确低风险简单指令组（定义：explicit_target 非空、risk=low、history 为空）有 36 条，原 P95 为 930ms，3 条因模型漏掉明确目标而澄清。产品允许独立边界实验，但原接口仍要求一次模型调用且执行目标来自候选；因此原 policy/simulator 保留，不能把边界收益称为原约束改进。
 
 ## 成果与证据
 
-- 入口：`evals/candidate/run_fast_path.py`；指标：`evals/candidate/analyze.py`。
-- 原约束 baseline（100/100）：正确完成 88/100，错误目标 2/100，非幂等重复 0/100，澄清 43/100，P95 1380ms，平均模型成本 0.00314 USD。
-- 边界 fast path（100/100）：正确完成 89/100，错误目标 2/100，非幂等重复 0/100，澄清 40/100，整体 P95 1380ms，平均模型成本 0.00206 USD。
-- fast path eligible 组（明确目标、低风险，36/36）：正确完成从 35/36 提升到 36/36，澄清从 3/36 降到 0/36，P95 从 930ms 降到 580ms。before/after timeout 仍使用原幂等键，未产生重复 commit。
-- 复现：`UV_CACHE_DIR=/tmp/codex-uv-cache uv run --quiet --offline --no-project python -m evals.candidate.run_fast_path --out runs/fast_path`；随后运行 `UV_CACHE_DIR=/tmp/codex-uv-cache uv run --quiet --offline --no-project python -m evals.candidate.analyze --traces runs/fast_path/traces.jsonl --out runs/fast_path/oracle_summary.json`。
+`fast_path.decide(observation)` 只读运行时输入：明确低风险目标直接执行，其他请求复用 baseline；world 只用于模拟与评分。工具等待和原幂等键保持一致，未新增模型或交互；跳过模型后的模型成本为零，不代表系统总成本为零。
+
+公开合成场景对照（每列分母单列）：
+
+| 指标 | 原约束 before/after | 边界 fast path（额外开销假设 0ms） |
+|---|---:|---:|
+| 正确完成 | 88/100 | 89/100 |
+| 错误目标 | 2/100 | 2/100 |
+| 高风险错误目标 | 0/37 | 0/37 |
+| 非幂等重复 | 0/100 | 0/100 |
+| 旧回执指标 | 90/100 | 91/100 |
+| 澄清 | 43/100 | 40/100 |
+| 简单组正确完成 | 35/36 | 36/36 |
+| 简单组澄清 | 3/36 | 0/36 |
+| 简单组 P95 | 930ms | 580ms |
+| 全量 P95 | 1380ms | 1380ms |
+| 平均模型成本 USD/请求 | 0.00314 | 0.00206 |
+
+反证与代价：明确低风险改 small 的正确完成仍为 35/36，澄清升至 9/36，P95 为 1280ms，故拒绝；前次把局部分组下降概括为总体完成率下降不准确。fast path 增加 20/21ms 规则耗时时，简单组 P95 为 600/601ms；规则作用于所有请求，其余组等待也增加。新目标的三种动作、执行前后超时、候选缺失、高风险/歧义回退与不读 world 均有断言。故意让上游确认目标出错会触发错误执行，证明信任前提失效时应撤回；该例违反原确认契约，仅作边界反证，不混入公开分数。
 
 ## 最终取舍与限制
 
-保留 fast path 作为独立边界实验，不宣称它已经改善原 simulator 下的整体 P95。高风险和模糊请求仍走 baseline，已有 2/100 低风险错误目标仍未解决。新增假设是 `explicit_target` 已经是产品侧确认目标，规则路径不调用模型，模型成本计为 0；规则本身的真实解析成本尚未测量。下一步应在真实入口验证确认目标的来源和规则执行授权，再决定是否纳入产品接口。
+原约束暂保留 baseline；fast path 继续作为边界实验。37 条高风险无错只说明本次未观察到错误。真实确认来源、工具授权和规则延迟/费用未测；未解决 2 条歧义错误和全量 P95。合成数据不能推断线上收益。完整 AI session、可靠工时尚未补齐，当前不是交卷版本。
+
+## 复现
+
+```sh
+UV_CACHE_DIR=/tmp/codex-uv-cache uv run --quiet --offline --no-project python task.py check
+UV_CACHE_DIR=/tmp/codex-uv-cache uv run --quiet --offline --no-project python -m evals.candidate.reproduce
+```
+
+输出：`runs/before/`、`runs/after/`（原约束保留 baseline）、`runs/fast_path/`（边界）、`runs/rejected_small/`、`runs/fast_path_20ms/`、`runs/fast_path_21ms/`，每组含 trace、旧指标、oracle 和分组指标；`runs/comparison.json` 汇总。runs 被 Git 忽略，本地保留，可按命令重建。
 
 ## 个人判断与 AI 交互
 
-本次使用 Codex 完成材料审计、指标设计、失败策略比较、TDD 和验证；用户指出“增加澄清会恶化 P95”，据此撤回全量保守澄清方向，改为规则优先 fast path。当前工程没有可导出的本地 session 文件，缺失情况见 `ai-sessions/INDEX.md`。
+用户指出增加澄清会恶化 P95，促使 AI 撤回全量保守澄清方向；本轮补出开销反证、评分和记录更正。开发提交 39394dd 为前次状态；会话记录状态见 ai-sessions/INDEX.md，总结不代替完整 session。

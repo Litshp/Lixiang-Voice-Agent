@@ -1,5 +1,6 @@
 """Independent fast-path experiment for confirmed low-risk commands."""
 from copy import deepcopy
+from math import isfinite
 
 from voice_agent import policy as baseline
 from voice_agent.simulator import validate, run as run_baseline
@@ -17,12 +18,23 @@ def is_fast_path_eligible(observation):
     )
 
 
-def _run_direct(scene):
+def decide(observation):
+    """Boundary policy: confirmed low-risk targets do not require a model.
+
+    Receives observation only; simulator world and model outputs stay outside.
+    None delegates to the original one-model contract.
+    """
+    if is_fast_path_eligible(observation):
+        return {"kind": "execute", "target": observation["explicit_target"]}
+    return None
+
+
+def _run_direct(scene, target, rule_latency_ms):
     validate(scene)
     obs, world = deepcopy(scene["observation"]), scene["world"]
-    target = obs["explicit_target"]
-    events = [{"type": "rule", "kind": "execute", "target": target}]
-    latency, acknowledged = 0, False
+    events = [{"type": "rule", "kind": "execute", "target": target,
+               "latency_ms": rule_latency_ms}]
+    latency, acknowledged = rule_latency_ms, False
     commits, seen_keys = [], set()
     first_key = obs["request_id"] + ":action"
 
@@ -65,8 +77,13 @@ def _run_direct(scene):
     }
 
 
-def run(scene):
+def run(scene, rule_latency_ms=0):
     """Run the fast path and delegate all other scenes to the unchanged baseline."""
-    if is_fast_path_eligible(scene["observation"]):
-        return _run_direct(scene)
-    return run_baseline(scene, baseline)
+    if not isfinite(rule_latency_ms) or rule_latency_ms < 0:
+        raise ValueError("rule latency must be finite and nonnegative")
+    decision = decide(deepcopy(scene["observation"]))
+    if decision is not None:
+        return _run_direct(scene, decision["target"], rule_latency_ms)
+    result = run_baseline(scene, baseline)
+    result["latency_ms"] += rule_latency_ms
+    return result
